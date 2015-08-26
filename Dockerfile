@@ -35,8 +35,7 @@ ENV JAVA_OPTS="-Xms1024m -Xmx1024m -XX:MaxPermSize=128m -Djavax.net.ssl.trustSto
 ## Build Image
 # Install packages
 RUN apt-get update && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -y git ant unzip && \
-  apt-get clean
+  DEBIAN_FRONTEND=noninteractive apt-get install -y git ant unzip
 
 RUN mkdir -p ${TMP_WORKDIR}
 
@@ -69,7 +68,7 @@ RUN sed -i -e "s|SOLR_VERSION|$SOLR_VERSION|g" ${TMP_WORKDIR}/solr.xml
 RUN wget --directory-prefix=${TMP_WORKDIR}/ ${SOLR_DGI_SCHEMA_DL_URI}
 RUN sed -i 's|<filter class="solr.EnglishPorterFilterFactory" protected="protwords.txt"/>|<filter class="solr.SnowballPorterFilterFactory" language="English" protected="protwords.txt"/>|g' ${TMP_WORKDIR}/schema.xml
 RUN sed -i '290i   <field name="_version_" type="long" indexed="true" stored="true"/>' ${TMP_WORKDIR}/schema.xml
-RUN cp ${TMP_WORKDIR}/schema.xml ${SOLR_DIR}/example/solr/collection1/conf
+RUN mv ${TMP_WORKDIR}/schema.xml ${SOLR_DIR}/example/solr/collection1/conf
 
 RUN sed -i 's|<openSearcher>false</openSearcher>|<openSearcher>true</openSearcher>|g' ${SOLR_DIR}/example/solr/collection1/conf/solrconfig.xml
 RUN sed -i 's|<queryResultWindowSize>20</queryResultWindowSize>|<queryResultWindowSize>50</queryResultWindowSize>|g' ${SOLR_DIR}/example/solr/collection1/conf/solrconfig.xml
@@ -83,5 +82,9 @@ ADD init/ /etc/my_init.d/
 ADD services/ /etc/service/
 RUN chmod -v +x /etc/service/*/run
 RUN chmod -v +x /etc/my_init.d/*.sh
+
+# Clean-up
+RUN apt-get clean && \
+  rm -rf /var/lib/apt/lists/* /tmp/solr-* /var/tmp/*
 
 EXPOSE 8080
