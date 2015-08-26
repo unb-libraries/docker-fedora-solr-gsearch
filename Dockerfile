@@ -1,4 +1,4 @@
-FROM unblibraries/oracle-jdk8
+FROM unblibraries/jdk:oracle8
 MAINTAINER Jacob Sanford <jsanford_at_unb.ca>
 
 ## Environment Variables
