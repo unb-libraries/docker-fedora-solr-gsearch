@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
 
-java -jar ${TMP_WORKDIR}/fcrepo-installer-${FEDORA_VERSION}.jar ${TMP_WORKDIR}/install.properties
-rm -rf ${TMP_WORKDIR}/fcrepo-installer-${FEDORA_VERSION}.jar
+if [ -f /tmp/FEDORA_NEEDS_INSTALL ];
+then
+  java -jar ${TMP_WORKDIR}/fcrepo-installer-${FEDORA_VERSION}.jar ${TMP_WORKDIR}/install.properties
+  rm -rf ${TMP_WORKDIR}/fcrepo-installer-${FEDORA_VERSION}.jar
+fi
