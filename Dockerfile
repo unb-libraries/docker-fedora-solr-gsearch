@@ -14,6 +14,8 @@ ENV SOLR_VERSION=4.2.0
 ENV FEDORA_MYSQL_USER fedora
 ENV FEDORA_MYSQL_PASS fedora
 ENV FEDORA_MYSQL_DB fedora3
+ENV FEDORA_MYSQL_HOST 127.0.0.1
+ENV FEDORA_MYSQL_PORT 3006
 
 # Paths
 ENV TMP_WORKDIR=/tmp/islandora_install
@@ -39,11 +41,9 @@ ENV JAVA_OPTS="-Xms1024m -Xmx1024m -XX:MaxPermSize=128m -Djavax.net.ssl.trustSto
 ## Build Image
 # Install packages
 RUN apt-get update && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -y git ant unzip
+  DEBIAN_FRONTEND=noninteractive apt-get install -y git ant unzip mysql-client
 
 RUN mkdir -p ${TMP_WORKDIR}
-
-CMD ["/sbin/my_init"]
 
 # Install and configure Fedora
 RUN wget --directory-prefix=${TMP_WORKDIR}/ ${FEDORA_COMMONS_DL_URI}
@@ -80,6 +80,8 @@ RUN sed -i 's|<requestDispatcher handleSelect="false" >|<requestDispatcher handl
 RUN sed -i '782i       <str name="fl">*</str>' ${SOLR_DIR}/example/solr/collection1/conf/solrconfig.xml
 RUN sed -i '783i       <str name="q.alt">*:*</str>' ${SOLR_DIR}/example/solr/collection1/conf/solrconfig.xml
 RUN sed -i '784i       <str name="qf">dc.title^5 dc.subject^3 dc.description^3 dc.creator^3 dc.contributor^3 dc.type^1 dc.relation^1 dc.publisher^1 mods_identifier_local_ms^3 ds.WARC_FILTER^1 text_nodes_HOCR_hlt^1 mods_subject_hierarchicalGeographic_region_ms^3 mods_identifier_hdl_mt^3 dc.identifier^3 PID^0.5 catch_all_fields_mt^0.1</str>' ${SOLR_DIR}/example/solr/collection1/conf/solrconfig.xml
+
+CMD ["/sbin/my_init"]
 
 # Copy phusion/baseimage inits.
 ADD init/ /etc/my_init.d/
