@@ -38,14 +38,14 @@ ENV SOLR_DGI_SCHEMA_DL_URI=https://raw.githubusercontent.com/discoverygarden/bas
 # Other
 ENV JAVA_OPTS="-Xms1024m -Xmx1024m -XX:MaxPermSize=128m -Djavax.net.ssl.trustStore=${FEDORA_HOME}/server/truststore -Djavax.net.ssl.trustStorePassword=tomcat"
 
-## Build Image
-# Install packages
+## Build Image.
+# Install prerequisite packages.
 RUN apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y git ant unzip mysql-client
 
 RUN mkdir -p ${TMP_WORKDIR}
 
-# Install and configure Fedora
+# Install and configure Fedora.
 RUN wget --directory-prefix=${TMP_WORKDIR}/ ${FEDORA_COMMONS_DL_URI}
 ADD conf/fedora-commons/install.properties ${TMP_WORKDIR}/install.properties
 
@@ -54,14 +54,14 @@ RUN wget --directory-prefix=${TMP_WORKDIR}/ ${FEDORA_DRUPAL_FILTER_XML_DL_URI}
 RUN git clone git://github.com/mjordan/drupal_filter_validator ${TMP_WORKDIR}/drupal_filter_validator
 RUN git clone git://github.com/Islandora/islandora-xacml-policies.git ${TMP_WORKDIR}/islandora-xacml-policies
 
-# Install and configure GSearch
+# Install and configure GSearch.
 RUN wget --directory-prefix=${TMP_WORKDIR}/ ${GSEARCH_DL_URI}
 RUN cd ${TMP_WORKDIR} && unzip fedoragsearch-${GSEARCH_VERSION}.zip
 RUN wget --directory-prefix=${TMP_WORKDIR}/ ${GSEARCH_DGI_EXT_DL_URI}
 RUN git clone git://github.com/discoverygarden/basic-solr-config.git ${TMP_WORKDIR}/basic-solr-config
 ADD conf/gsearch/fgsconfig-basic.properties ${TMP_WORKDIR}/fgsconfig-basic.properties
 
-# Install and configure Solr
+# Install and configure Solr.
 RUN wget --directory-prefix=${TMP_WORKDIR}/ ${SOLR_DL_URI}
 RUN cd ${TMP_WORKDIR}/ && tar xvzpf solr-${SOLR_VERSION}.tgz
 RUN mv ${TMP_WORKDIR}/solr-${SOLR_VERSION} /opt/

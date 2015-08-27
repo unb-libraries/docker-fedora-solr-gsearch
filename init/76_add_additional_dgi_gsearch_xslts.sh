@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Check if this is the initial deployment.
 if [ -f /tmp/FEDORA_NEEDS_INSTALL ];
 then
   cp ${TMP_WORKDIR}/basic-solr-config/foxmlToSolr.xslt ${FEDORA_HOME}/tomcat/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/

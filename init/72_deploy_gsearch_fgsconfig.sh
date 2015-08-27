@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Check if this is the initial deployment.
 if [ -f /tmp/FEDORA_NEEDS_INSTALL ];
 then
   sed -i -e "s|FEDORA_HOME_DIR|$FEDORA_HOME|g" ${TMP_WORKDIR}/fgsconfig-basic.properties
